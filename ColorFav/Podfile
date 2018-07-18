@@ -1,0 +1,9 @@
+platform :ios, '11.4'
+
+target 'ColorFav' do
+  use_frameworks!
+
+  # Pods for ColorFav
+  pod 'RealmSwift'
+
+end
