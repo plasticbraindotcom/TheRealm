@@ -7,17 +7,26 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ColorFavsController: UIViewController {
     
     @IBOutlet weak var colorFavsList: UITableView!
-    
     var selectedPath = IndexPath(row: 0, section: 0)
-    
-    var colorList = [FavColor]()
+    var colorList: Results<FavColor>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let realm = try! Realm()
+        
+        colorList = realm
+            .objects(FavColor.self)
+            .sorted(
+                byKeyPath: "timeStamp",
+                ascending: false
+        )
+        
         colorFavsList.delegate = self
         colorFavsList.dataSource = self
     }
@@ -28,7 +37,7 @@ class ColorFavsController: UIViewController {
     
 }
 
-//TableView Methods
+// MARK: - TableView Methods
 extension ColorFavsController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -40,11 +49,9 @@ extension ColorFavsController: UITableViewDelegate, UITableViewDataSource {
             Bundle.main.loadNibNamed(ColorFavCell.sbid,owner: self, options: nil)?.first as? ColorFavCell else {
             return UITableViewCell(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
         }
-        
         colorFavCell.colorView.shiftTo(colorList[indexPath.row].red, colorList[indexPath.row].green, colorList[indexPath.row].blue)
         colorFavCell.nameLabel.text = colorList[indexPath.row].name
         colorFavCell.hexLabel.text = colorList[indexPath.row].hex
-        
         return colorFavCell
     }
     
@@ -56,25 +63,34 @@ extension ColorFavsController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
-//Saving Methods
+// MARK: - Saving Methods
 extension ColorFavsController: ColorRetrievable {
     
     func didSave(color: FavColor) {
-        colorList.insert(color, at: 0)
+
+        let realm = try! Realm()
+        
+        try! realm.write {
+            realm.add(color)
+        }
+        
         let path = [IndexPath(row: 0, section: 0)]
         colorFavsList.insertRows(at: path, with: .left)
-        print("did save was selected")
     }
     
     func didEdit(color: FavColor) {
         colorFavsList.reloadRows(at: [selectedPath], with: .fade)
-        print("did edit was selected")
     }
     
     func didDelete(color: FavColor) {
-        colorList.remove(at: selectedPath.row)
+        
+        let realm = try! Realm()
+        
+        try! realm.write {
+            realm.delete(color)
+        }
+        
         colorFavsList.deleteRows(at: [selectedPath], with: .right)
-        print("did delete was selected")
     }
     
 }

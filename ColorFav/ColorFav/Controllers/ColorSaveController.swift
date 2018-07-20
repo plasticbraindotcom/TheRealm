@@ -23,7 +23,6 @@ class ColorSaveController: UIViewController {
     @IBOutlet weak var blueSlider: UISlider!
     
     static let sbid = "ColorSaveController"
-    
     weak var colorRequestor: ColorRetrievable?
     
     static func activate(
@@ -57,13 +56,11 @@ class ColorSaveController: UIViewController {
     }
     
     @IBAction func saveColor(_ sender: Any) {
-        
         let color = FavColor(
             r: redSlider.value,
             g: greenSlider.value,
             b: blueSlider.value,
             name: nameField.text)
-        
         colorRequestor?.didSave(color: color)
         navigationController?.popViewController(animated: true)
     }
@@ -74,7 +71,6 @@ class ColorSaveController: UIViewController {
             attributes: [
                 .font : UIFont.futuraMedium(pt: 18),
                 .foregroundColor : UIColor.lightGray])
-        
         nameField.attributedPlaceholder = pHolderText
     }
     
@@ -89,9 +85,7 @@ class ColorSaveController: UIViewController {
     
 }
 
-
-
-//Textfield Management
+// MARK: - Textfield Management
 extension ColorSaveController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -101,8 +95,7 @@ extension ColorSaveController: UITextFieldDelegate {
 
 }
 
-
-//Keyboard Management
+// MARK: - Keyboard Management
 extension ColorSaveController {
     
     private func keyboardClearance(up: Bool, by: CGFloat? = nil) {

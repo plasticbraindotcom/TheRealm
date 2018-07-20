@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ColorEditController: UIViewController {
     
@@ -24,11 +25,8 @@ class ColorEditController: UIViewController {
     
     @IBOutlet weak var deleteButton: UIButton!
     
-    
     static let sbid = "ColorEditController"
-    
     weak var colorRequestor: ColorRetrievable?
-    
     var existingColor: FavColor!
     
     static func activate(
@@ -77,48 +75,43 @@ class ColorEditController: UIViewController {
     }
     
     @IBAction func cancelColor(_ sender: Any) {
-        
         navigationController?.popViewController(animated: true)
-        
     }
     
     @IBAction func editColor(_ sender: Any) {
-        
         guard let existingColor = existingColor else {
             navigationController?.popViewController(animated: true)
             return
         }
         
-        existingColor.red = redSlider.value
-        existingColor.green = greenSlider.value
-        existingColor.blue = blueSlider.value
-        existingColor.name = nameField.text
+        let realm = try! Realm()
         
+        try! realm.write {
+            
+            existingColor.red = redSlider.value
+            existingColor.green = greenSlider.value
+            existingColor.blue = blueSlider.value
+            existingColor.name = nameField.text
+            
+        }
         colorRequestor?.didEdit(color: existingColor)
-        
         navigationController?.popViewController(animated: true)
     }
     
     @IBAction func deleteColor(_ sender: Any) {
-        
         colorRequestor?.didDelete(color: existingColor)
         navigationController?.popViewController(animated: true)
-        
     }
-    
-    
     
     func setUpStyle() {
         deleteButton.layer.cornerRadius = 10
         deleteButton.layer.borderColor = UIColor.red.cgColor
         deleteButton.layer.borderWidth = 2.5
-        
         let pHolderText = NSAttributedString(
             string: "Enter Color Name",
             attributes: [
                 .font : UIFont.futuraMedium(pt: 18),
                 .foregroundColor : UIColor.lightGray])
-        
         nameField.attributedPlaceholder = pHolderText
     }
     
@@ -133,9 +126,7 @@ class ColorEditController: UIViewController {
     
 }
 
-
-
-//Textfield Management
+// MARK: - Textfield Management
 extension ColorEditController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -145,8 +136,7 @@ extension ColorEditController: UITextFieldDelegate {
     
 }
 
-
-//Keyboard Management
+// MARK: - Keyboard Management
 extension ColorEditController {
     
     private func keyboardClearance(up: Bool, by: CGFloat? = nil) {
