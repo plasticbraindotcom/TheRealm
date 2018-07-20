@@ -47,7 +47,7 @@ userName$ pod install
 
 Once that is executed it will install your specified frameworks and plop the
 project into a workspace. From this point on you'll need to do your work in
-the *fileName.xcworkspace*. You can desregaurd the *fileName.xcodeproj*.
+the *fileName.xcworkspace*. You can disregard the *fileName.xcodeproj*.
 It's a good idea to build the project just to make sure that everthing is
 running properly and Xcode is recognizing the newly installed frameworks.
 
@@ -87,6 +87,8 @@ Click the + under Input Files and add an entry for each framework:
 
 `(SRCROOT)/Carthage/Build/iOS/Realm.framework`
 `(SRCROOT)/Carthage/Build/iOS/Realm.framework`
+
+You can now begin coding in Xcode, opening the *ColorFav.xcodeproj* as usual.
 
 ---
 
